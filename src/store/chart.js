@@ -80,5 +80,22 @@ export default {
     }
   },
   actions: {
+    createCandledata ({ commit }, payload) {
+      const tempCandleData = []
+      for(let entry of Object.entries(payload)){
+        tempCandleData.push({
+          x: entry[0],
+          y: [
+            entry[1].Open, 
+            entry[1].High,
+            entry[1].Low,
+            entry[1].Close,
+          ]
+        })
+      }
+      commit('updateState',{
+        candleData: tempCandleData
+      })
+    }
   }
 }

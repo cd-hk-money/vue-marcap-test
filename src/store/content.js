@@ -1,4 +1,5 @@
 import axios from 'axios'
+import * as _ from 'lodash'
 
 const DAYENUM = Object.freeze({"1일": 1, "5일": 5, "10일": 10, "30일": 30})
 // const STOCK = Object({"단일종목": 1, "전체종목": 2})
@@ -34,10 +35,9 @@ export default {
     }
   },
   actions: {
-    async searchContents ({ state, commit }, payload) {
+    async searchContents ({ state, commit, dispatch }, payload) {
       const selectedDay = DAYENUM[state.rangeSelected]
       // const selectedStock = STOCK[state.stockSelected]
-      console.log(payload)
       // if (!state.title && selectedStock === 1)
       //   return
               
@@ -48,18 +48,18 @@ export default {
         const root = findByX(payload)
         const url = `/${root}/${payload}/${selectedDay}`          
         const res = await axios.get(url, HEADER) // finance_server.py
-          
+        let tempStock = _.cloneDeep(res.data)  
+
         commit('updateState', {
-          stock: res.data,
+          stock: tempStock,
           loading: false,
           loaded: true,
           title: ''
         })
+        dispatch('chart/createCandledata', tempStock, {root: true})
       } catch(e) {
         console.log(e)
-      } finally {
-        console.log('request resolved') 
-      }
+      } 
     },
 
     // 오늘의 기업 지표를 가져오고, 특정 기준에 따라 정렬된 데이터를 store에 저장

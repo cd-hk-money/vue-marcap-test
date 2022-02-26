@@ -5,6 +5,7 @@
 </template>
 <script>
 import VueApexCharts from 'vue-apexcharts'
+import { mapActions } from 'vuex'
 export default {
   components: {
     apexchart: VueApexCharts
@@ -15,22 +16,9 @@ export default {
   },
   computed: {
     candleSeries () {
-      let candleData = []
-
-      for(let entry of Object.entries(this.$props.propSeries)){
-        candleData.push({
-          x: entry[0],
-          y: [
-            entry[1].Open,
-            entry[1].High,
-            entry[1].Low,
-            entry[1].Close,
-          ]          
-        })
-      }
       return [{
         name : this.$props.name,
-        data: candleData
+        data: this.$store.state.chart.candleData
       }]
       // return this.$store.state.chart.candleData
     },
@@ -43,11 +31,15 @@ export default {
       }
     }
   },
+  methods: {
+    ...mapActions('chart', [
+      'createCandledata'
+    ])
+  },
   created () {
-    console.log('chart created.')
+    this.createCandledata(this.$props.propSeries)
   },
   updated () {
-    console.log('chart updated.')
   }
   
 }

@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import * as _ from 'lodash'
 import Chart from '@/components/Chart'
 
 export default {
@@ -29,9 +28,7 @@ export default {
   },
   computed: {
     stocks () {
-      let tempStock = _.cloneDeep(this.$store.state.content.stock)
-      delete tempStock.Name
-      return tempStock
+      return this.$store.state.content.stock
     },
     stockName () {
       return this.$store.state.content.stock.Name

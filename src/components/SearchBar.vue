@@ -58,7 +58,7 @@ import '@/styles/overrides.scss'
 export default {
   data () {
     return {
-      rangeitems: ['하루', '일주일', '한달', '분기'],
+      rangeitems: ['1일', '5일', '10일', '30일'],
       stockTypes: ['단일종목', '전체종목']
     }
   },

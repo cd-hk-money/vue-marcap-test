@@ -1,8 +1,7 @@
 import axios from 'axios'
-import moment from 'moment'
 
-const DAYENUM = Object.freeze({"하루": 1, "일주일": 2, "한달": 3, "분기": 4})
-const STOCK = Object({"단일종목": 1, "전체종목": 2})
+const DAYENUM = Object.freeze({"1일": 1, "5일": 5, "10일": 10, "30일": 30})
+// const STOCK = Object({"단일종목": 1, "전체종목": 2})
 const HEADER = {
   headers: {
     'Content-Type': 'text/plain;charset=utf-8'
@@ -13,29 +12,15 @@ export default {
   namespaced: true,
   state: () => ({
     title: '',
-    rangeSelected: "하루",
+    rangeSelected: "30일",
     stockSelected: "단일종목",
     loading: false,
     loaded: false,
     contents: [],
-    stock: {
-      Code: null,
-      Name: null,
-      Dept: null,
-      Close: null,
-      ChangeCode: null,
-      Changes: null,
-      ChangesRatio: null,
-      Open: null,
-      High: null,
-      Low: null,
-      Volume: null,
-      Amount: null,
-      Marcap: null,
-      Stocks: null,
-      MarketId: null,
-      Rank: null
-    }
+    stock: {},
+    singleStock: {},
+    volumeRank: {},
+    nameMappingCode: {}
   }),
   getters: {},
   mutations: {
@@ -44,67 +29,70 @@ export default {
         state[key] = payload[key]
       })
     },
-    updateStock (state, payload) {
-      state.stock = payload
-    },
     initStock (state) {
       state.stock = null
     }
   },
   actions: {
-    async searchContents ({ state, commit }) {
-      
+    async searchContents ({ state, commit }, payload) {
       const selectedDay = DAYENUM[state.rangeSelected]
-      const selectedStock = STOCK[state.stockSelected]
-      let res = null
-
-      let start = ''
-      let end = getDate(7) // YYYY-MM-DD
-
-      if (!state.title && selectedStock === 1)
-        return
+      // const selectedStock = STOCK[state.stockSelected]
+      console.log(payload)
+      // if (!state.title && selectedStock === 1)
+      //   return
               
-      switch (selectedDay) {
-        case 1: // 하루
-          break
-        case 2: // 일주일ㄴ
-          start = getDate(14)
-          break
-        case 3: // 달ㄴ
-          start = getDate(37)
-          break
-        case 4: // 분기
-          start = getDate(97)
-          break
-      }
       try {
         commit('updateState', {
           loading: true
         })
-  
-        if (selectedDay === 1) {
-          console.log('request : ' + `/${state.title}/${end}`)
-          res = await axios.get(`/${state.title}/${end}`, HEADER)
-        }
-        else {
-          console.log('request : ' + `/${state.title}/${start}/${end}`)
-          res = await axios.get(`/${state.title}/${start}/${end}`, HEADER)
-        }
-        commit('updateStock', JSON.parse(res.data))
+        const root = findByX(payload)
+        const url = `/${root}/${payload}/${selectedDay}`          
+        const res = await axios.get(url, HEADER) // finance_server.py
+          
         commit('updateState', {
+          stock: res.data,
           loading: false,
-          loaded: true
+          loaded: true,
+          title: ''
         })
       } catch(e) {
         console.log(e)
-      } 
+      } finally {
+        console.log('request resolved') 
+      }
+    },
+
+    // 오늘의 기업 지표를 가져오고, 특정 기준에 따라 정렬된 데이터를 store에 저장
+    async getTodayContents ({ commit }) {
+      try {
+        const url = '/today'
+        const res = await axios.get(url ,HEADER) // finance_server.py
+        const nameMappingCodeTemp = {}
+        const volumeRankTemp = []
+
+        res.data.data.map( stock => {
+          nameMappingCodeTemp[`${stock[1]}`] = stock[0]
+        })
+        res.data.data.slice(0,9).map( stock => {
+          volumeRankTemp.push({
+            name: stock[1],
+            code: stock[0]
+          })
+        })
+        commit('updateState', {
+          volumeRank: volumeRankTemp,
+          nameMappingCode: nameMappingCodeTemp
+        })
+      } catch(e) {
+        console.log(e)
+      }
+       
     }
   }
 }
 
-function getDate (day) {
-  const i = -day
-  const today = moment()
-  return today.add(i, 'day').format('YYYY-MM-DD')
+function findByX (arg) {
+  return parseInt(arg) ? 'findByCode' : 'findByName'
 }
+
  

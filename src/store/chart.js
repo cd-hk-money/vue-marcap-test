@@ -4,7 +4,7 @@ export default {
     series: [],
     chartOptions: {
       chart: {
-        background: '#fff',
+        background: '#F0FFFF',
         animations: {
           enabled: true,
           easing: 'easinout',
@@ -67,7 +67,8 @@ export default {
         }
       }
     },
-    candleData: null
+    candleData: null,
+    lineData: null
   }),
   getters: {
 
@@ -96,6 +97,24 @@ export default {
       commit('updateState',{
         candleData: tempCandleData
       })
-    }
+    },
+    createLinedata ({ commit }, payload) {
+      const temp = []
+      for(let entry of Object.entries(payload)){
+        temp.push({
+          x: entry[0],
+          y: entry[1].Close
+        })        
+      }
+      const tempLineData = [{
+        series: [{
+          name: payload.Name,
+          data: temp.slice(1, -1)
+        }]
+      }]
+      commit('updateState', {
+        lineData: tempLineData[0].series
+      })    
+    },
   }
 }

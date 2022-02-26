@@ -14,7 +14,24 @@
           </span>
         </div>
       </div>
-      <chart :propSeries="stocks" :name="stockName"/>   
+      <div>
+        <v-container>
+          <v-row class="mb-6" >
+            <v-col>
+              <chart 
+                :propSeries="stocks" 
+                :chartType="'candlestick'"
+                :name="stockName"/>                  
+            </v-col>
+            <v-col>
+              <chart 
+                :propSeries="stocks"
+                :chartType="'line'"
+                :name="stockName" />                
+            </v-col>
+          </v-row>
+        </v-container>          
+      </div>      
     </div>
   </div>
 </template>

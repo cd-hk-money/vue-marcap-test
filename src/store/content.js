@@ -49,7 +49,6 @@ export default {
         const url = `/${root}/${payload}/${selectedDay}`          
         const res = await axios.get(url, HEADER) // finance_server.py
         let tempStock = _.cloneDeep(res.data)  
-
         commit('updateState', {
           stock: tempStock,
           loading: false,
@@ -57,6 +56,7 @@ export default {
           title: ''
         })
         dispatch('chart/createCandledata', tempStock, {root: true})
+        dispatch('chart/createLinedata', tempStock, {root: true})
       } catch(e) {
         console.log(e)
       } 

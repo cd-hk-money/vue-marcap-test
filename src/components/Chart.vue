@@ -1,6 +1,10 @@
 <template>
  <div>
-   <apexchart width="400" type="candlestick" :options="options" :series="candleSeries"></apexchart>
+   <apexchart   
+    width="400" 
+    :type="getChartType" 
+    :options="options" 
+    :series="series"></apexchart>
  </div>
 </template>
 <script>
@@ -10,17 +14,33 @@ export default {
   components: {
     apexchart: VueApexCharts
   },
-  props: {
-    propSeries: Object,
-    name: String
-  },
+  props: [
+    'propSeries',
+    'chartType',
+    'name'
+  ],
   computed: {
     candleSeries () {
+      console.log('candle!')
+      let data = this.$store.state.chart.candleData.slice(1, -1)
       return [{
-        name : this.$props.name,
-        data: this.$store.state.chart.candleData
+        name: this.$props.name,
+        data: data
       }]
-      // return this.$store.state.chart.candleData
+    },
+    getChartType () {
+      return this.$props.chartType
+    },
+    lineSeries () {
+      return this.$store.state.chart.lineData
+    },
+    series () {
+      let type = this.$props.chartType
+      if (type === 'line') {
+        console.log('lineSeriesCalled')
+        return this.lineSeries
+      } else
+      return this.candleSeries 
     },
     options: {
       get () {
@@ -33,14 +53,16 @@ export default {
   },
   methods: {
     ...mapActions('chart', [
-      'createCandledata'
+      'createCandledata',
+      'createLinedata'
     ])
   },
   created () {
     this.createCandledata(this.$props.propSeries)
+    this.createLinedata(this.$props.propSeries)
   },
   updated () {
-  }
-  
+
+  }  
 }
 </script>

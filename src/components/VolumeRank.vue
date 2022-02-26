@@ -55,7 +55,7 @@ export default {
     justify-content: center;
     color: white;
     padding: 10px;
-    border-bottom: 1.2px solid grey;
+    border-bottom: 3px solid grey;
   }
   .v-list {
     background: black;

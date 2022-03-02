@@ -5,14 +5,41 @@
         <li> {{ stock }}</li>
       </div>    -->
       <div class="stock">
-        <div class="stock-name-box">
-          <span class="stock-name">
-            {{ stockName }}
-          </span>
-          <span defer class="stock-code">
-            {{ stockCode }}
-          </span>
-        </div>
+        <template>
+          <v-toolbar
+            color="#3D3737"
+            elevation="1"
+            dark
+          >
+            <v-toolbar-title class="stock-name">
+              {{ stockName }}
+            </v-toolbar-title>
+
+            <v-divider
+              class="mx-4"
+              vertical
+            ></v-divider>
+
+            <span class="subheading">
+              {{ stockCode }}
+            </span>
+
+            <v-spacer></v-spacer>
+
+            <v-toolbar-items class="hidden-sm-and-down">
+
+
+              <v-divider vertical></v-divider>
+
+              <v-divider vertical></v-divider>
+
+              <v-divider vertical></v-divider>
+              
+            </v-toolbar-items>
+
+            <v-app-bar-nav-icon></v-app-bar-nav-icon>
+          </v-toolbar>
+        </template>   
       </div>
       <div>
         <v-container>
@@ -29,9 +56,15 @@
                 :chartType="'line'"
                 :name="stockName" />                
             </v-col>
+            <!-- <v-col>
+              <chart 
+                :propSeries="kospiSeries"
+                :chartType="'candlestick'"
+                :name="stockName" />                
+            </v-col> -->
           </v-row>
         </v-container>          
-      </div>      
+      </div>         
     </div>
   </div>
 </template>
@@ -56,6 +89,19 @@ export default {
     loaded () {
       return this.$store.state.content.loaded
     },
+    // kospiSeries () {
+    //   return this.$store.state.content.kospi
+    // }
+  },
+  methods: {
+    getToday () {
+      const now = new Date()
+      const date = new Date(now.setDate(now.getDate() - 1))
+      const year = date.getFullYear()
+      const month = ('0' + (date.getMonth() + 1)).slice(-2)
+      const day = ('0' + date.getDate()).slice(-2)
+      return year + '-' + month + '-' + day
+    }
   },
   updated () {
     
@@ -74,7 +120,6 @@ export default {
   }
   .stock-name-box {
     padding-right: 20px;
-    width: 400px;
     margin: 0px;
   }
   .stock {

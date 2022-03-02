@@ -81,40 +81,45 @@ export default {
     }
   },
   actions: {
-    createCandledata ({ commit }, payload) {
-      const tempCandleData = []
-      for(let entry of Object.entries(payload)){
-        tempCandleData.push({
-          x: entry[0],
-          y: [
-            entry[1].Open, 
-            entry[1].High,
-            entry[1].Low,
-            entry[1].Close,
-          ]
+    createChartData ({ commit }, payload) {
+      const {type, data} = payload
+      let temp = []
+      let linetemp = []
+      
+      if (type === 'candle') {
+        for (let entry of Object.entries(data)) {
+          temp.push({
+            x: entry[0],
+            y: [
+              entry[1].Open,
+              entry[1].High,
+              entry[1].Low,
+              entry[1].Close
+            ]
+          })
+        }
+        commit('updateState', {
+          candleData: temp
         })
-      }
-      commit('updateState',{
-        candleData: tempCandleData
-      })
-    },
-    createLinedata ({ commit }, payload) {
-      const temp = []
-      for(let entry of Object.entries(payload)){
-        temp.push({
-          x: entry[0],
-          y: entry[1].Close
-        })        
-      }
-      const tempLineData = [{
-        series: [{
-          name: payload.Name,
-          data: temp.slice(1, -1)
+      } else if (type === 'line') {
+        for (let entry of Object.entries(data)) {
+          temp.push({
+            x: entry[0],
+            y: entry[1].Close
+          })
+        }
+        linetemp = [{
+          series: [{
+            name: data.Name,
+            data: temp.slice(1, -1)
+          }]
         }]
-      }]
-      commit('updateState', {
-        lineData: tempLineData[0].series
-      })    
-    },
+        commit('updateState', {
+          lineData: linetemp[0].series
+        })
+      } else {
+        console.log('error!')
+      }
+    }
   }
 }

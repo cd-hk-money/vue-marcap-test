@@ -21,7 +21,8 @@ export default {
     stock: {},
     singleStock: {},
     volumeRank: {},
-    nameMappingCode: {}
+    nameMappingCode: {},
+    kospi: {}
   }),
   getters: {},
   mutations: {
@@ -35,19 +36,18 @@ export default {
     }
   },
   actions: {
+    // # payload로 주어진 인자로 AJAX요청
     async searchContents ({ state, commit, dispatch }, payload) {
       const selectedDay = DAYENUM[state.rangeSelected]
-      // const selectedStock = STOCK[state.stockSelected]
-      // if (!state.title && selectedStock === 1)
-      //   return
-              
+
+      console.log(state)              
       try {
         commit('updateState', {
           loading: true
         })
         const root = findByX(payload)
         const url = `/${root}/${payload}/${selectedDay}`          
-        const res = await axios.get(url, HEADER) // finance_server.py
+        const res = await axios.get(url, HEADER) 
         let tempStock = _.cloneDeep(res.data)  
         commit('updateState', {
           stock: tempStock,
@@ -55,20 +55,27 @@ export default {
           loaded: true,
           title: ''
         })
-        dispatch('chart/createCandledata', tempStock, {root: true})
-        dispatch('chart/createLinedata', tempStock, {root: true})
+        dispatch('chart/createChartData', {
+          type: 'candle',
+          data: tempStock
+        },{root: true})
+        dispatch('chart/createChartData', {
+          type: 'line',
+          data: tempStock
+        },{root: true})
       } catch(e) {
         console.log(e)
       } 
     },
 
     // 오늘의 기업 지표를 가져오고, 특정 기준에 따라 정렬된 데이터를 store에 저장
-    async getTodayContents ({ commit }) {
+    async getTodayContents ({ state, commit, dispatch }) {
       try {
         const url = '/today'
-        const res = await axios.get(url ,HEADER) // finance_server.py
+        const res = await axios.get(url ,HEADER) 
         const nameMappingCodeTemp = {}
         const volumeRankTemp = []
+        const res_kos = await axios.get('/today/KOSPI', HEADER)
 
         res.data.data.map( stock => {
           nameMappingCodeTemp[`${stock[1]}`] = stock[0]
@@ -81,13 +88,15 @@ export default {
         })
         commit('updateState', {
           volumeRank: volumeRankTemp,
-          nameMappingCode: nameMappingCodeTemp
+          nameMappingCode: nameMappingCodeTemp,
+          kospi: res_kos.data
         })
+        dispatch('chart/createCandledata', state.kospi, {root: true})
       } catch(e) {
         console.log(e)
-      }
-       
+      }       
     }
+
   }
 }
 

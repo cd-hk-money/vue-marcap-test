@@ -53,13 +53,18 @@ export default {
   },
   methods: {
     ...mapActions('chart', [
-      'createCandledata',
-      'createLinedata'
+      'createChartData',
     ])
   },
   created () {
-    this.createCandledata(this.$props.propSeries)
-    this.createLinedata(this.$props.propSeries)
+    this.createChartData({
+      type: 'line',
+      serie: this.$props.propSeries
+    })
+    this.createChartData({
+      type: 'candle',
+      serie: this.$props.propSeries
+    })
   },
   updated () {
 

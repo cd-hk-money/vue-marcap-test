@@ -9,6 +9,7 @@
           v-for="content in contents" 
           :key="content.code"
           @click="searchContents(content.name)">
+          {{ content.index }}
             <v-list-item-content>            
               <v-list-item-title 
                 v-text="content.name"/>

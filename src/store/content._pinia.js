@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia'
 import axios from 'axios'
 import * as _ from 'lodash'
 
@@ -9,8 +10,7 @@ const HEADER = {
   }
 }
 
-export default {
-  namespaced: true,
+export const useContentStore = defineStore("content_pinia", {
   state: () => ({
     title: '',
     rangeSelected: "30일",
@@ -24,37 +24,26 @@ export default {
     nameMappingCode: {},
     kospi: {}
   }),
-  getters: {},
-  mutations: {
-    updateState (state, payload) {
-      Object.keys(payload).forEach(key => {
-        state[key] = payload[key]
-      })
-    },
-    initStock (state) {
-      state.stock = null
-    }
+  getters: {
+    
   },
   actions: {
-    // # payload로 주어진 인자로 AJAX요청
-    async searchContents ({ state, commit, dispatch }, payload) {
+    async searchContents ({ state, dispatch }, payload) {
       const selectedDay = DAYENUM[state.rangeSelected]
 
       console.log(state)              
       try {
-        commit('updateState', {
-          loading: true
-        })
+        this.loading = true
         const root = findByX(payload)
         const url = `/${root}/${payload}/${selectedDay}`          
         const res = await axios.get(url, HEADER) 
         let tempStock = _.cloneDeep(res.data)  
-        commit('updateState', {
-          stock: tempStock,
-          loading: false,
-          loaded: true,
-          title: ''
-        })
+
+        this.stock = tempStock
+        this.loading = false
+        this.loadied = true
+        this.title = ''
+
         dispatch('chart/createChartData', {
           type: 'candle',
           data: tempStock
@@ -67,9 +56,7 @@ export default {
         console.log(e)
       } 
     },
-
-    // 오늘의 기업 지표를 가져오고, 특정 기준에 따라 정렬된 데이터를 store에 저장
-    async getTodayContents ({ state, commit, dispatch }) {
+    async getTodayContents ({ state, dispatch }) {
       try {
         const url = '/today'
         const res = await axios.get(url ,HEADER) 
@@ -85,19 +72,17 @@ export default {
             name: stock[1],
             code: stock[0]
           })
-        })
-        commit('updateState', {
-          volumeRank: volumeRankTemp,
-          nameMappingCode: nameMappingCodeTemp,
-          kospi: res_kos.data
-        })
+        })      
+        this.volumeRank = volumeRankTemp
+        this.nameMappingCode = nameMappingCodeTemp
+        this.kospi = res_kos.data
         dispatch('chart/createCandledata', state.kospi, {root: true})
       } catch(e) {
         console.log(e)
       }       
     }
   }
-}
+})
 
 function findByX (arg) {
   return parseInt(arg) ? 'findByCode' : 'findByName'

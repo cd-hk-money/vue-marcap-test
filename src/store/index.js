@@ -1,28 +1,23 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import content from './content'
-// import contents from '/.contents'
-import chart from './chart'
+// import Vue from 'vue'
+// import Vuex from 'vuex'
+// import content from './content'
+// import contentPinia from './content_pinia'
+// import chart from './chart'
+// import chartPinia from './chart_pinia'
 
-Vue.use(Vuex)
+// Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
+// export default new Vuex.Store({
+//   state: {
     
-  },
-  mutations: {
-    updateState (state, payload) {
-      Object.keys(payload).forEach(key => {
-        state[key] = payload[key]
-      })
-    }
-  },
-  actions: {
-  },
-  modules: {
-    content,
-    // contents,    
-    chart
-
-  }
-})
+//   },
+//   actions: {
+//   },
+//   modules: {
+//     content,
+//     // contents,    
+//     chart,
+//     contentPinia,
+//     chartPinia
+//   }
+// })

@@ -53,9 +53,45 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { useContentStore } from '../store/content_pinia'
+import { computed, ref } from '@vue/composition-api'
+
 import '@/styles/overrides.scss'
 
 export default {
+  setup () {
+    // use store
+    const contentStore = useContentStore()
+
+    // data 
+    const state = ref({
+      rangeitems: ['1일', '5일', '10일', '30일'],
+      stockTypes: ['단일종목', '전체종목']
+    })
+
+    // computed
+    const title = computed({
+      get: () => contentStore.title,
+      set: title => { contentStore.title = title }
+    })
+
+    const rangeSelected = computed({
+      get: () => contentStore.rangeSelected,
+      set: rangeSelected => { contentStore.rangeSelected = rangeSelected}
+    })
+
+    const stockSelected = computed({
+      get: () => contentStore.stockSelected,
+      set: stockSelected => { contentStore.stockSelected = stockSelected}
+    })
+    
+    const loading = computed(() => contentStore.loading)
+    contentStore.selected = "하루"
+  
+    return { contentStore, state, title, rangeSelected, stockSelected,
+      loading
+    }
+  },
   data () {
     return {
       rangeitems: ['1일', '5일', '10일', '30일'],
@@ -63,33 +99,7 @@ export default {
     }
   },
   computed: {
-    title: {
-      get () {
-        return this.$store.state.content.title
-      },
-      set (title) {
-        this.$store.commit('content/updateState', { title })
-      }
-    },
-    rangeSelected: {
-      get () {
-        return this.$store.state.content.rangeSelected
-      },
-      set (rangeSelected) {
-        this.$store.commit('content/updateState', { rangeSelected })
-      }
-    },
-    stockSelected: {
-      get () {
-        return this.$store.state.content.stockSelected
-      },
-      set (stockSelected) {
-        this.$store.commit('content/updateState', { stockSelected })
-      }
-    },
-    loading () {
-      return this.$store.state.content.loading
-    }
+
   },
   methods: {
     ...mapActions('content', [  //content store에서 searchContents를 가져옴

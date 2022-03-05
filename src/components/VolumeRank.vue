@@ -21,30 +21,26 @@
 </template>
 <script>
 
-import {mapActions} from 'vuex'
+import { useContentStore } from '../store/content_pinia'
+import { computed } from '@vue/composition-api'
 
 export default {
-  
-  components: {
+  setup () {
+    //store
+    const contentStore = useContentStore()
 
-  },
-  computed: {
-    contents () {
-      return this.$store.state.content.volumeRank
-    }
+    //computed
+    const contents = computed(() => contentStore.volumeRank)
+
+    contentStore.initContents()
+
+    return { contentStore, contents }
   },
   methods: {
-    ...mapActions('content', [  //content store에서 searchContents를 가져옴
-      'searchContents'
-    ])
-  },
-  created () {
-    this.$store.dispatch('content/getTodayContents')
-
-  },
-  mounted() {
+    searchContents (name) {
+      this.contentStore.searchContents(name)
+    }
   }
-
 }
 </script>
 

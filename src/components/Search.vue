@@ -24,59 +24,45 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { useContentStore } from '../store/content_pinia'
+import { computed, ref } from '@vue/composition-api'
 import '@/styles/overrides.scss'
 // import BaseInput from '@/components/BaseInput'
 
 export default {
-  data () {
-    return {
+  setup () {
+
+    // usestore
+    const contentStore = useContentStore()
+
+    // data
+    const state = ref({
       isFocused: false
-    }
-  },
-  computed: {
-    title: {
-      get () {
-        return this.$store.state.content.title
-      },
-      set (title) {
-        this.$store.commit('content/updateState', { title })
-      }
-    },
-    // rangeSelected: {
-    //   get () {
-    //     return this.$store.state.content.rangeSelected
-    //   },
-    //   set (rangeSelected) {
-    //     this.$store.commit('content/updateState', { rangeSelected })
-    //   }
-    // },
-    // stockSelected: {
-    //   get () {
-    //     return this.$store.state.content.stockSelected
-    //   },
-    //   set (stockSelected) {
-    //     this.$store.commit('content/updateState', { stockSelected })
-    //   }
-    // },
-    loading () {
-      return this.$store.state.content.loading
-    }
+    })
+
+    // computed
+    const title = computed({
+      get: () => contentStore.title,
+      set: title => {contentStore.title = title}
+    })
+    const loading = computed(() => contentStore.loading)
+
+    contentStore.selected = 'd'
+
+    // mounted 
+    // onMounted(() => {
+    //   this.$nextTick(() => {
+    //     console.log(this.$refs.textRefs)
+    //   })
+    // })
+
+    return {contentStore, state, title, loading}
   },
   methods: {
-    ...mapActions('content', [  //content store에서 searchContents를 가져옴
-      'searchContents'
-    ]),   
-  },
-  created () {
-    this.$store.commit('content/updateState', { selected: "d"})
-  },
-  mounted () {
-    this.$nextTick(() => {
-      console.log(this.$refs.textRefs)
-    })
+   searchContents (title) {
+     this.contentStore.searchContents(title)
+   }
   }
-
 }
 </script>
 

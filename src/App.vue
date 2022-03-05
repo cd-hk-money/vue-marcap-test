@@ -40,8 +40,6 @@
           <contents-list />
         </v-layout>  
       </v-container>
-    <router-link to="/"> </router-link>
-    <router-link to="/details"></router-link>
     </v-main>
 
   </v-app>
@@ -66,7 +64,7 @@ export default {
 <style>
 .v-main__warp {
   background: #2d2 !important; 
-}
+}a
 .v-app-bar {
   min-height: auto !important;
   align-items: center !important;

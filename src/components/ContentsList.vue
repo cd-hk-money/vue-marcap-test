@@ -71,27 +71,21 @@
 
 <script>
 import Chart from '@/components/Chart'
+import { useContentStore } from '../store/content_pinia'
+import { computed } from '@vue/composition-api'
 
 export default {
   components: {
     Chart 
   },
-  computed: {
-    stocks () {
-      return this.$store.state.content.stock
-    },
-    stockName () {
-      return this.$store.state.content.stock.Name
-    },
-    stockCode () {
-      return this.$store.state.content.nameMappingCode[this.stockName]
-    },
-    loaded () {
-      return this.$store.state.content.loaded
-    },
-    // kospiSeries () {
-    //   return this.$store.state.content.kospi
-    // }
+  setup () {
+    const contentStore = useContentStore()
+    
+    const stocks = computed(() => contentStore.stock)
+    const stockName = computed(() => contentStore.stock.Name)
+    const stockCode = computed(() => contentStore.nameMappingCode[stockName])
+    const loaded = computed(() => contentStore.loaded)
+    return {stocks, stockName, stockCode, loaded}
   },
   methods: {
     getToday () {
@@ -102,9 +96,6 @@ export default {
       const day = ('0' + date.getDate()).slice(-2)
       return year + '-' + month + '-' + day
     }
-  },
-  updated () {
-    
   },
 }
 </script>

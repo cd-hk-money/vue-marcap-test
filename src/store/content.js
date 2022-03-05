@@ -1,6 +1,7 @@
 import axios from 'axios'
 import * as _ from 'lodash'
 
+
 const DAYENUM = Object.freeze({"1일": 1, "5일": 5, "10일": 10, "30일": 30})
 // const STOCK = Object({"단일종목": 1, "전체종목": 2})
 const HEADER = {

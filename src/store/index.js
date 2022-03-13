@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import content from './content'
-// import contents from '/.contents'
+import interest from './interest'
 import chart from './chart'
 
 Vue.use(Vuex)
@@ -21,8 +21,8 @@ export default new Vuex.Store({
   },
   modules: {
     content,
-    // contents,    
-    chart
+    chart,
+    interest
 
   }
 })

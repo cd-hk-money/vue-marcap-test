@@ -8,9 +8,9 @@
           dark
           v-for="content in contents" 
           :key="content.code"
-          @click="searchContents(content.name)">
-          {{ content.index }}
+          @click="searchContents(content.name)">          
             <v-list-item-content>            
+              {{ content.index }}
               <v-list-item-title 
                 v-text="content.name"/>
                 <v-list-item-subtitle v-text="content.code" />
@@ -23,11 +23,7 @@
 
 import {mapActions} from 'vuex'
 
-export default {
-  
-  components: {
-
-  },
+export default {  
   computed: {
     contents () {
       return this.$store.state.content.volumeRank
@@ -40,11 +36,7 @@ export default {
   },
   created () {
     this.$store.dispatch('content/getTodayContents')
-
   },
-  mounted() {
-  }
-
 }
 </script>
 

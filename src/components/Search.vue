@@ -1,41 +1,46 @@
 <template>
-  <v-text-field
-    defer
-    ref="textRefs"
-    class="shrink"
-    id="textfileds"
-    v-model="title"
-    rounded
-    solo
-    label="기업명, 코드"
-    @keypress.enter="searchContents(title)"
-  >
-    <template v-slot:prepend-inner>
-      <v-icon>search</v-icon>        
-    </template>
-    <template v-slot:append>
-      <v-progress-circular
-        v-if="loading"
-        size="24"
-        color="primary"
-        indeterminate />
-    </template>      
-  </v-text-field>        
+  <div>
+    <v-autocomplete
+      dark
+      ref="autoinput"
+      v-model="select"
+      :loading="loading"
+      :items="items"
+      :search-input.sync="search"
+      cache-items
+      cless="mx-4"
+      flat
+      hide-no-data
+      hide-details
+      label="기업명, 코드"
+      solo-inverted
+      rounded
+      @input="inputChanged"
+      @keypress.enter="searchContents(search)"
+      >
+      <template v-slot:prepend-inner>
+        <v-icon>search</v-icon>        
+      </template>
+    </v-autocomplete>
+  </div>
+  
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import '@/styles/overrides.scss'
+// import { mapActions } from 'vuex'
+// import '@/styles/overrides.scss'
 // import BaseInput from '@/components/BaseInput'
 
 export default {
   data () {
     return {
-      isFocused: false
+      loading: false,
+      search: null,
+      items: []
     }
   },
   computed: {
-    title: {
+    select: {
       get () {
         return this.$store.state.content.title
       },
@@ -43,40 +48,40 @@ export default {
         this.$store.commit('content/updateState', { title })
       }
     },
-    // rangeSelected: {
-    //   get () {
-    //     return this.$store.state.content.rangeSelected
-    //   },
-    //   set (rangeSelected) {
-    //     this.$store.commit('content/updateState', { rangeSelected })
-    //   }
-    // },
-    // stockSelected: {
-    //   get () {
-    //     return this.$store.state.content.stockSelected
-    //   },
-    //   set (stockSelected) {
-    //     this.$store.commit('content/updateState', { stockSelected })
-    //   }
-    // },
-    loading () {
-      return this.$store.state.content.loading
+    states () {
+      return this.$store.state.content.searchStates
+    },
+  },
+  watch : {
+    search (val) {
+      if(!val) return
+      val && val !== this.select && this.querySelections(val)
     }
   },
   methods: {
-    ...mapActions('content', [  //content store에서 searchContents를 가져옴
-      'searchContents'
-    ]),   
+    inputChanged () {
+      console.log('inputChanged')
+      this.$refs.autoinput.blur()
+      this.$store.dispatch('content/searchContents', this.select)
+    },
+    searchContents (select) {
+      this.$refs.autoinput.blur()
+      this.$store.dispatch('content/searchContents', select)
+    },
+    querySelections (val) {
+      this.loading = true
+      clearTimeout(this._timerId)
+      setTimeout(() => {
+        this.items = this.states.filter(e => {
+          return ( e || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1
+        })
+        this.loading = false
+      }, 500)
+    }
   },
   created () {
     this.$store.commit('content/updateState', { selected: "d"})
   },
-  mounted () {
-    this.$nextTick(() => {
-      console.log(this.$refs.textRefs)
-    })
-  }
-
 }
 </script>
 
@@ -89,7 +94,5 @@ export default {
   }
   .v-text-field:focus {
     border: 2px solid lightcoral !important;
-  }
-  .v-input--is-focused {
   }
 </style>

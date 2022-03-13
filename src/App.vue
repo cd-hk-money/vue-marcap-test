@@ -20,6 +20,9 @@
       elevation="3"
       :clipped="true"
       app>
+      <v-container>
+        <interest-list />
+      </v-container>
     </v-navigation-drawer>
 
     <v-navigation-drawer color="#363333" 
@@ -52,13 +55,14 @@
 import ContentsList from '@/components/ContentsList'
 import Search from '@/components/Search'
 import VolumeRank from '@/components/VolumeRank'
-
+import InterestList from '@/components/InterestList'
 
 export default {
   components: {
     ContentsList,
     Search,
-    VolumeRank
+    VolumeRank,
+    InterestList
   }
 }
 </script>

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
+import Randing from '@/components/Randing'
 import Details from '@/components/Details'
 
 Vue.use(Router)
@@ -8,8 +8,8 @@ Vue.use(Router)
 export default new Router({
   route: [
     {
-      path: '/home',
-      component: Home
+      path: '/',
+      component: Randing
     },
     {
       path: '/details',
@@ -17,3 +17,4 @@ export default new Router({
     }
   ]
 })
+

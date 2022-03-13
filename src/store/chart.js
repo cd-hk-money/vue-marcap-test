@@ -82,12 +82,11 @@ export default {
   },
   actions: {
     createChartData ({ commit }, payload) {
-      const {type, data} = payload
+      const {chartType, stocks} = payload
       let temp = []
       let linetemp = []
-      
-      if (type === 'candle') {
-        for (let entry of Object.entries(data)) {
+      if (chartType === 'candle') {
+        for (let entry of Object.entries(stocks)) {
           temp.push({
             x: entry[0],
             y: [
@@ -101,16 +100,16 @@ export default {
         commit('updateState', {
           candleData: temp
         })
-      } else if (type === 'line') {
-        for (let entry of Object.entries(data)) {
+      } else if (chartType === 'line') {
+        for (let entry of Object.entries(stocks)) {
           temp.push({
             x: entry[0],
-            y: entry[1].Close
+            y: entry[1].Volume
           })
         }
         linetemp = [{
           series: [{
-            name: data.Name,
+            name: stocks.Name,
             data: temp.slice(1, -1)
           }]
         }]

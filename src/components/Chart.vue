@@ -10,45 +10,30 @@
 <script>
 import VueApexCharts from 'vue-apexcharts'
 import { mapActions } from 'vuex'
+
 export default {
   components: {
     apexchart: VueApexCharts
   },
-  props: [
-    'propSeries',
-    'chartType',
-    'name'
-  ],
+  props: ['propSeries','chartType','name'],
   computed: {
     candleSeries () {
-      console.log('candle!')
-      let data = this.$store.state.chart.candleData.slice(1, -1)
       return [{
         name: this.$props.name,
-        data: data
+        data: this.$store.state.chart.candleData.slice(1, -1)
       }]
     },
-    getChartType () {
+    getChartType () { 
       return this.$props.chartType
     },
-    lineSeries () {
-      return this.$store.state.chart.lineData
+    lineSeries () { 
+      return this.$store.state.chart.lineData 
     },
-    series () {
-      let type = this.$props.chartType
-      if (type === 'line') {
-        console.log('lineSeriesCalled')
-        return this.lineSeries
-      } else
-      return this.candleSeries 
+    options () { 
+      return this.$store.state.chart.chartOptions 
     },
-    options: {
-      get () {
-        return this.$store.state.chart.chartOptions
-      },
-      set () {
-
-      }
+    series () { 
+      return this.$props.chartType === 'line' ? this.lineSeries : this.candleSeries 
     }
   },
   methods: {
@@ -56,18 +41,15 @@ export default {
       'createChartData',
     ])
   },
-  created () {
-    this.createChartData({
-      type: 'line',
-      serie: this.$props.propSeries
-    })
-    this.createChartData({
-      type: 'candle',
-      serie: this.$props.propSeries
-    })
-  },
   updated () {
-
-  }  
+    // this.createChartData({
+    //   type: 'line',
+    //   serie: this.$props.propSeries
+    // })
+    // this.createChartData({
+    //   type: 'candle',
+    //   serie: this.$props.propSeries
+    // })
+  },
 }
 </script>

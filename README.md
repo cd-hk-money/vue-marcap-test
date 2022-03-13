@@ -18,7 +18,7 @@
 ```
 
 ---
-> ### <strong>`interest.js`</strong> <br>
+### <strong>`interest.js`</strong> <br>
 
 ***state***
 ```js
@@ -72,7 +72,7 @@
 ```  
 ---
 
-> ### <strong>`content.js`</strong> <br>
+### <strong>`content.js`</strong> <br>
 ***state***
 ```js
   state: () => ({

@@ -1,7 +1,6 @@
 export default {
   namespaced :true,
   state: ()=>({
-    series: [],
     chartOptions: {
       chart: {
         background: '#F0FFFF',
@@ -67,8 +66,8 @@ export default {
         }
       }
     },
-    candleData: null,
-    lineData: null
+    candleData: [],
+    lineData: []
   }),
   getters: {
 
@@ -82,11 +81,13 @@ export default {
   },
   actions: {
     createChartData ({ commit }, payload) {
-      const {chartType, stocks} = payload
+      const {chartType, stock} = payload
       let temp = []
-      let linetemp = []
+      let chartTemp = []
+      let lineTemp = []      
+
       if (chartType === 'candle') {
-        for (let entry of Object.entries(stocks)) {
+        for (let entry of Object.entries(stock)) {
           temp.push({
             x: entry[0],
             y: [
@@ -97,24 +98,30 @@ export default {
             ]
           })
         }
+
+        chartTemp = [{
+          name: stock.Name,
+          data: temp.slice(0, -1)
+        }]
+
         commit('updateState', {
-          candleData: temp
+          candleData: chartTemp
         })
       } else if (chartType === 'line') {
-        for (let entry of Object.entries(stocks)) {
+        for (let entry of Object.entries(stock)) {
           temp.push({
             x: entry[0],
             y: entry[1].Volume
           })
-        }
-        linetemp = [{
-          series: [{
-            name: stocks.Name,
-            data: temp.slice(1, -1)
-          }]
+        }        
+
+        lineTemp = [{
+          name: stock.Name,
+          data: temp.slice(0, -1)
         }]
+
         commit('updateState', {
-          lineData: linetemp[0].series
+          lineData: lineTemp
         })
       } else {
         console.log('error!')

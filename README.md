@@ -1,6 +1,6 @@
 # vue-marcap-test
 
-## store
+## /src/store
 
 
 ### <strong>`interest.js`</strong> : 관심종목 <br>
@@ -141,12 +141,76 @@
   actions: {      
     // payload로써 종목 이름을 받고,
     // 종목 이름에 해당하는 api 요청을 보내 state의 stock에 저장.
-    // stock을 이용하여 차트데이터 생성 요청
+    // stock을 이용하여 차트데이터 생성 요청.
     async searchContents({state, commit, dispatch}, payload) { }
 
     // 오늘의 기업 전체 지표를 가져옴.
-    // state의 nameMappingCode, volumeRank, searchStates, subscribes 초기화
+    // state의 nameMappingCode, volumeRank, searchStates, subscribes 초기화.
     async getTodayContents ({commit, state}) { }
   }
 ```  
+
+### <strong>`chart.js`</strong> <br>
+***state***
+```js
+  state: () => ({
+    chartOptions: {},  // 차트 옵션
+    candleData: [],    // 봉차트 데이터
+    lineData: []       // 라인차트 데이터
+  })
+```
+```js
+  candleData: [
+    {
+      name: '삼성전자',
+      data: [
+        {
+          x: '2022-03-05',
+          y: ['5654', '6547', '6470', '7777']   // 시가, 고가, 저가, 종가 순
+        },
+        {
+          x: '2022-03-06',
+          y: ['5672', '1111', '2222', '3333']
+        },
+        ...        
+      ]
+    }
+  ]
+
+  linedata = [
+    {
+      name: '삼성전자',
+      data: [
+        {
+          x: '2022-03-05',
+          y: '75645'
+        },
+        {
+          x: '2022-03-06',
+          y: '75231'
+        }
+        ...
+      ]
+    }
+  ]
+
+```
+***mutations***
+```js
+  mutations: {      
+    // payload = {key: value} 로 받아 key에 해당하는 state를 value로 변경.
+    // payload = {title: 'codma'} 일경우 state의 title을 'codma'로 변경.
+    updateState(state, payload) { }          
+  },
+```
+
+***actions***
+```js
+  actions: {
+    // payload = {chartType, stock} 로 받아 
+    // chartType에 맞는 차트를 stock를 이용하여 생성.
+    // stock의 형식은 content.js의 state의 형식과 같다.
+    createChartData({commit}, payload) { }
+  }
+```
 

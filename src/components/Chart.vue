@@ -18,16 +18,13 @@ export default {
   props: ['propSeries','chartType','name'],
   computed: {
     candleSeries () {
-      return [{
-        name: this.$props.name,
-        data: this.$store.state.chart.candleData.slice(1, -1)
-      }]
-    },
-    getChartType () { 
-      return this.$props.chartType
+      return this.$store.state.chart.candleData
     },
     lineSeries () { 
       return this.$store.state.chart.lineData 
+    },
+    getChartType () { 
+      return this.$props.chartType
     },
     options () { 
       return this.$store.state.chart.chartOptions 

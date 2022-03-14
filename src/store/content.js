@@ -17,12 +17,15 @@ export default {
     loading: false,
     loaded: false,
     stock: {},
+    stocks: {},
     subscribes: {},
     volumeRank: {},
     nameMappingCode: {},
     searchStates: []
   }),
-  getters: {},
+  getters: {
+
+  },
   mutations: {
     updateState (state, payload) {
       Object.keys(payload).forEach(key => {
@@ -58,13 +61,12 @@ export default {
         })
         dispatch('chart/createChartData', {
           chartType: 'candle',
-          stocks: tempStock
+          stock: tempStock
         },{ root: true })
         dispatch('chart/createChartData', {
           chartType: 'line',
-          stocks: tempStock
+          stock: tempStock
         },{ root: true })
-        console.log(state.stock)
       } catch(e) {
         console.log(e)
       } finally {
@@ -82,7 +84,6 @@ export default {
         const searchStatesTemp = []
         const subscribesTemp = {}
         
-        // 구독 여부와 이름, 코드 매핑 
         res.data.data.map( stock => {
           const title = stock[1]
           const code = stock[0]
@@ -90,7 +91,6 @@ export default {
           subscribesTemp[`${title}`] = false
         })
 
-        // 시가총액 TOP 10
         res.data.data.slice(0,9).map( stock => {
           volumeRankTemp.push({
             name: stock[1],
@@ -98,7 +98,6 @@ export default {
           })
         })
 
-        // 자동완성 기능을 위한 기업명 가져오기
         res.data.data.map( stock => {
           searchStatesTemp.push(stock[1])
         })

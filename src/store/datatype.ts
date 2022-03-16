@@ -7,6 +7,14 @@
 //   interests: interests,
 // }
 
+type member = {
+  id: Number,
+  username: String,
+  password: String,
+  eamil: String,
+  subscribe: Boolean
+}
+
 // let interestList = {
 //   interestList: Array(interestList),
 // }
@@ -103,4 +111,8 @@
 //   stock,
 //   score,
 // }
+
+export {
+  member
+}
 

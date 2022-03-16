@@ -63,6 +63,9 @@ export default {
     Search,
     VolumeRank,
     InterestList
+  },
+  created () {
+    
   }
 }
 </script>

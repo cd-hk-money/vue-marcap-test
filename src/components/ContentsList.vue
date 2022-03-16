@@ -90,7 +90,7 @@
 
               <v-card>
                 <v-card-title class="text-h5 grey lighten-2 text-center">
-                  어디다가 넣을까요?
+                  어디다가 넣을까요????? ㅜㅡㅜ
                 </v-card-title>
                 <v-card-text>
                   <v-list>
@@ -123,13 +123,13 @@
           <v-row class="mb-6" >
             <v-col>
               <chart 
-                :propSeries="stocks" 
+                :propSeries="stock" 
                 :chartType="'candlestick'"
                 :name="stockName"/>                  
             </v-col>
             <v-col>
               <chart 
-                :propSeries="stocks"
+                :propSeries="stock"
                 :chartType="'line'"
                 :name="stockName" />                
             </v-col>
@@ -146,43 +146,37 @@
           </v-row>
         </v-container>               -->
       </div>         
+      <details-chart 
+        :stock="stock"
+        :requestDate="requestDate"></details-chart>
     </div>
   </div>
 </template>
 
 <script>
 import Chart from '@/components/Chart'
-import {numberRegularation} from '../tools/index.js'
+import DetailsChart from '@/components/details/DetailsChart'
 export default {
+  props: [],
   components: {
-    Chart 
+    Chart,
+    DetailsChart
   },
   data () {
     return {
-      dialog: false
+      dialog: false,
+      requestDate: 5
     }
   },
   computed: {
-    
-    // 전체 종목
-    stocks () {
+    // 개별 종목 가져오기
+    stock () {
       return this.$store.state.content.stock
     },
 
     // 가장 최근 값들
     lastStockClose () {      
-      const stockCloseObj = Object.entries(this.$store.state.content.stock).slice(-2)[0]                // 오늘
-      const stockYesterdayCloseObj = Object.entries(this.$store.state.content.stock).slice(-3)[0]       // 어제
-      return {
-        closeDay: stockCloseObj[0],                                          
-        closeValue: String(numberRegularation(stockCloseObj[1].Close)),            
-        changeRate: String(stockCloseObj[1].Change.toFixed(3)),     
-        changeValue: numberRegularation((stockCloseObj[1].Close * stockCloseObj[1].Change).toFixed(0)),
-        closeVolume: numberRegularation(stockCloseObj[1].Volume),
-        changeVolume: String(numberRegularation(stockCloseObj[1].Volume - stockYesterdayCloseObj[1].Volume)),
-        changeVolumeRate: numberRegularation(
-          ((stockCloseObj[1].Volume - stockYesterdayCloseObj[1].Volume) / stockYesterdayCloseObj[1].Volume * 100).toFixed(0))
-      }
+      return this.$store.getters['content/recent']
     },
     
     // 현재 기업 이름
@@ -192,7 +186,7 @@ export default {
 
     // 현재 기업 코드
     stockCode () {
-      return this.$store.state.content.nameMappingCode[this.stockName]
+      return this.$store.getters['content/nameMappingCode'][this.stockName]
     },
 
     // 로딩을 위한 변수
@@ -219,7 +213,6 @@ export default {
     }
   },
   methods: {
-
     // +면 빨간색, -면 파란색 반환
     isChangeRated (arg) {
       return arg.indexOf('-') ? 'red' : 'blue'
@@ -230,7 +223,6 @@ export default {
       return arg.indexOf('-') ? '+' + arg : arg
     },
 
-    //
     addList (e) {
       this.$store.dispatch('interest/addInterest', {
         title: this.stockName,
@@ -239,7 +231,7 @@ export default {
       this.subscribes = this.stockName
       this.dialog = false
     },
-  }
+  },
 }
 </script>
 

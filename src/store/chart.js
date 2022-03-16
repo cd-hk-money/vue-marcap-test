@@ -70,7 +70,13 @@ export default {
     lineData: []
   }),
   getters: {
-
+    vuetifyChart: state => payload => {      
+      const temp = []
+      state.lineData[0].data.map(v => {
+        temp.push(v.y)
+      })
+      return temp.slice(0, payload.requestDate)
+    }
   },
   mutations: {
     updateState (state, payload) {

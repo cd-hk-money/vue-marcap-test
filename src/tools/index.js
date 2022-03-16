@@ -4,12 +4,15 @@ function numberRegularation (arg) {
 }
 
 function printRate (arg) {
-  if(!arg.indexOf('-')) {
-    return '+' + arg
-  }
+    return arg.indexOf('-') ? '+' + arg : arg
+}
+
+function isChangeRated (arg) {
+  return arg.indexOf('-') ? 'red' : 'blue'
 }
 
 export {
   numberRegularation,
-  printRate
+  printRate,
+  isChangeRated
 }

@@ -105,13 +105,15 @@
       dialog: false,
     }),
   computed: {
+
+    // 관심종목 리스트들
     items: {
       get () {
         return this.$store.state.interest.interestList
       },  
-      set () {
-
-      }
+      // set (payload) {
+      //   this.$store.dispatch('interest/editInterestList', payload)
+      // }
     },
     title: {
       get () {
@@ -123,9 +125,6 @@
     }
   },
   methods: {
-    loadInterestList () {
-      this.items = { }
-    },
     dialogClose (title) {
       if (!title) {
         this.message = '관심종목 이름은 한 글자 이상이여야 합니다.'
@@ -150,7 +149,7 @@
     }
   },
   created () {
-    this.loadInterestList()
+    // this.$store.dispatch('interest/initInterestList')
   }
 }
 

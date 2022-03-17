@@ -77,12 +77,10 @@ export default {
       })
       return temp.slice(0, payload.requestDate)
     },
-    candleSeries: state => {
-      return state.candleData
+    getChartSeries: state => payload => {
+      return payload.type === 'line'? state.lineData : state.candleData
     },
-    lineSeries: state => { 
-      return state.lineData
-    }
+
   },
   mutations: {
     updateState (state, payload) {

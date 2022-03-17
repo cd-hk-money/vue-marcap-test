@@ -65,7 +65,7 @@ export default {
     InterestList
   },
   created () {
-    
+    this.$store.dispatch('content/getTodayContents')
   }
 }
 </script>

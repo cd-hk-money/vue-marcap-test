@@ -20,7 +20,6 @@ export default {
     stock: {},  // 검색한 종목 하나에 대한 주가정보
     stocks: {}, // 상장된 모든 종목
     subscribes: {}, // 구독여부
-    volumeRank: {}, // 시가총액 상위10
   }),
   getters: {
     // 이름과 코드 매핑
@@ -119,18 +118,10 @@ export default {
       try {
         const url = '/today'
         const res = await axios.get(url ,HEADER) 
-        const volumeRankTemp = []
 
-        res.data.data.slice(0,9).map(stock => {
-          volumeRankTemp.push({
-            name: stock[1],
-            code: stock[0]
-          })
-        })
 
         commit('updateState', {
           stocks: res.data.data,
-          volumeRank: volumeRankTemp
         })
 
       } catch(e) {

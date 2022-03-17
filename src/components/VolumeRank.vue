@@ -89,16 +89,16 @@ export default {
   },
   computed: {
     contents () {
-      return this.$store.state.content.volumeRank
+      return this.$store.getters['content/volumeRank']
     }
   },
   methods: {
-    ...mapActions('content', [  //content store에서 searchContents를 가져옴
+    ...mapActions('content', [  
       'searchContents'
     ])
   },
   created () {
-    this.$store.dispatch('content/getTodayContents')
+
   },
 }
 </script>

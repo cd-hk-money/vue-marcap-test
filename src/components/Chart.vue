@@ -9,7 +9,6 @@
 </template>
 <script>
 import VueApexCharts from 'vue-apexcharts'
-import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -33,20 +32,8 @@ export default {
       return this.$props.chartType === 'line' ? this.lineSeries : this.candleSeries 
     }
   },
-  methods: {
-    ...mapActions('chart', [
-      'createChartData',
-    ])
-  },
   updated () {
-    // this.createChartData({
-    //   type: 'line',
-    //   serie: this.$props.propSeries
-    // })
-    // this.createChartData({
-    //   type: 'candle',
-    //   serie: this.$props.propSeries
-    // })
+    
   },
 }
 </script>

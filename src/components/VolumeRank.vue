@@ -1,5 +1,5 @@
 <template>
-  <!-- <div class="content">
+  <div class="content">
     <div class="name">
       시가총액 상위 10
     </div>
@@ -17,8 +17,8 @@
             </v-list-item-content>            
         </v-list-item>   
     </v-list>
-  </div>   -->
-    <v-sheet
+  </div>  
+    <!-- <v-sheet
     height="400"
     class="overflow-hidden"
     style="position: relative;"
@@ -71,7 +71,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-  </v-sheet>
+  </v-sheet> -->
 </template>
 <script>
 

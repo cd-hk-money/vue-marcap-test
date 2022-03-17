@@ -66,6 +66,7 @@ export default {
   },
   created () {
     this.$store.dispatch('content/getTodayContents')
+    console.log('init...')
   }
 }
 </script>

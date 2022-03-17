@@ -18,7 +18,7 @@ export default {
     loaded: false,
 
     stock: {},  // 검색한 종목 하나에 대한 주가정보
-    stocks: {}, // 상장된 모든 종목
+    stocks: [], // 상장된 모든 종목
     subscribes: {}, // 구독여부
   }),
   getters: {
@@ -58,7 +58,7 @@ export default {
           code: stock[0]
         })
       })
-      return temp
+      return temp.slice(0, 10)
     },
     
     // 자동완성을 위한 종목명 테이블
@@ -67,7 +67,7 @@ export default {
       state.stocks.map(stock => {
         temp.push(stock[1])
       })
-      return temp
+      return state.stocks
     },
   },
   mutations: {
@@ -84,7 +84,7 @@ export default {
     }
   },
   actions: {
-    async searchContents ({ state, commit, dispatch}, payload) {
+    async searchContents ({ state, commit}, payload) {
       const requestDate = DAYENUM[state.rangeSelected]
       try {
         commit('updateState', {
@@ -101,11 +101,11 @@ export default {
           loaded: true,
           title: ''
         })
-        dispatch('chart/createChartData', {
+        commit('chart/createChartData', {
           chartType: 'candle',
           stock: tempStock
         },{ root: true })
-        dispatch('chart/createChartData', {
+        commit('chart/createChartData', {
           chartType: 'line',
           stock: tempStock
         },{ root: true })
@@ -119,11 +119,9 @@ export default {
         const url = '/today'
         const res = await axios.get(url ,HEADER) 
 
-
         commit('updateState', {
           stocks: res.data.data,
         })
-
       } catch(e) {
         console.log(e)
       }       

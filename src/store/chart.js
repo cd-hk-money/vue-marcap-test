@@ -76,6 +76,12 @@ export default {
         temp.push(v.y)
       })
       return temp.slice(0, payload.requestDate)
+    },
+    candleSeries: state => {
+      return state.candleData
+    },
+    lineSeries: state => { 
+      return state.lineData
     }
   },
   mutations: {
@@ -83,14 +89,11 @@ export default {
       Object.keys(payload).forEach(key => {
         state[key] = payload[key]
       })
-    }
-  },
-  actions: {
-    createChartData ({ commit }, payload) {
+    },
+
+    createChartData (state, payload) {
       const {chartType, stock} = payload
       let temp = []
-      let chartTemp = []
-      let lineTemp = []      
 
       if (chartType === 'candle') {
         for (let entry of Object.entries(stock)) {
@@ -105,33 +108,30 @@ export default {
           })
         }
 
-        chartTemp = [{
+        state.candleData = [{
           name: stock.Name,
           data: temp.slice(0, -1)
-        }]
+        }]        
 
-        commit('updateState', {
-          candleData: chartTemp
-        })
       } else if (chartType === 'line') {
         for (let entry of Object.entries(stock)) {
           temp.push({
             x: entry[0],
             y: entry[1].Volume
           })
-        }        
+        }   
 
-        lineTemp = [{
+        state.lineData = [{
           name: stock.Name,
           data: temp.slice(0, -1)
         }]
 
-        commit('updateState', {
-          lineData: lineTemp
-        })
       } else {
         console.log('error!')
       }
     }
+  },
+  actions: {
+
   }
 }

@@ -1,7 +1,8 @@
 # vue-marcap-test
 
-## /src/store
+# <strong>state->getters 이전버전. 구조변경으로 수정 필요. </strong>
 
+## /src/store
 
 ### <strong>`interest.js`</strong> : 관심종목 <br>
 ### <strong>`content.js`</strong> : 기업 정보 <br>

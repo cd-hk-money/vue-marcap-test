@@ -15,8 +15,8 @@
               <v-sparkline
                 :value="value"
                 color="rgba(255, 255, 255, .7)"
-                height="100"
-                padding="24"
+                height="230"
+                padding="20"
                 stroke-linecap="round"
                 smooth
               >

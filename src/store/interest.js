@@ -1,5 +1,8 @@
+// 관심종목 리스트
+
 import * as _ from 'lodash'
 import axios from 'axios'
+
 export default {
   namespaced: true,
   state: () => ({
@@ -22,6 +25,8 @@ export default {
     }
   },
   actions: {
+
+    // /interestList
     // 관심종목 리스트 정보를 가져온다.
     async initInterestList ({commit}, payload) {
       try {
@@ -34,6 +39,7 @@ export default {
       }
     },
 
+    // /interestList
     // 관심종목 리스트를 추가한다.
     async addInterestList2 ({commit}, payload) {
       try {
@@ -47,6 +53,7 @@ export default {
       }
     },
 
+    // /interestItem
     // 관심종목 리스트의 이름을 변경한다.
     async editInterestList ({commit}, payload) {
       try {
@@ -59,6 +66,7 @@ export default {
       }
     },
 
+    // /interestItem
     // 관심종목 리스트에 관심종목을 추가한다.
     async addInterestListItem({commit}, payload) {
       try {

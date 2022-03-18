@@ -13,9 +13,12 @@ export default {
   namespaced: true,
   state: () => ({
     title: '',  // Search 컴포넌트의 title
-    rangeSelected: "30일",
+    rangeSelected: "10일",
+
     loading: false,
     loaded: false,
+    subsideLoading: false,
+    detailsLoading: false,
 
     stock: {},  // 검색한 종목 하나에 대한 주가정보
     stocks: [], // 상장된 모든 종목
@@ -114,6 +117,7 @@ export default {
       }
     },
 
+    // 오늘의 주식시장
     async getTodayContents ({commit}) {
       try {
         const url = '/today'

@@ -1,11 +1,17 @@
+// 종목 상세정보 페이지
+
 import axios from "axios"
 
 export default {
   namespaced: true,
   state: () => ({
-    stock: {},
-    chartStock: {},
-    subSide: {}
+    stock: {},                // 종목 정보
+    chartStock: {},           // 그래프 표현을 위한 종목 정보
+    subSide: {},              // 유사종목, 뉴스
+
+    stockLoading: false,      // 종목정보 로딩
+    chartStockLoading: false, // 그래프 표현을 위한 종목 정보 로딩
+    subSideLoading: false,    // 유사종목, 뉴스 로딩
   }),
   getters: {
 
@@ -23,29 +29,23 @@ export default {
     }
   },
   actions: {
-    async getStockDetail ({commit}, payload) {      
+
+    // /stockDetail/{title}
+    // 그래프 표현을 위한 종목 정보를 가져온다.
+    async getChartStockDetail ({commit, dispatch}, payload) {      
       try {
+        commit('updateState', {
+          chartStockLoading: true
+        })
         const res = await axios.get(`/stockDetail/${payload.title}`, {
           requestDate: payload.requestDate
         })
         commit('updateState', {
+          chartStockLoading: false,
           stock: res.data
         })
-      } catch (e) {
-        console.log(e)
-      }
-    },
 
-    async getChartStockDetail ({commit, dispatch}, payload) {
-      try {
-        const res = await axios.get(`/stockDetail/${payload.title}`)
-        commit('updateState', {
-          chartStock: res.data
-        })
-
-        // res.data를 candle 데이터로 사용할 수 있게끔 가공?
         const candleTemp = []
-
         dispatch('/chart/createChartData', {
           chartType: 'candle',
           data: candleTemp
@@ -55,10 +55,34 @@ export default {
       }
     },
 
+    // /stockDetail/{title}
+    // 종목 정보를 가져온다.
+    async getStockDetail ({commit}, payload) {
+      try {
+        commit('updateState', {
+          stockLoading: true
+        })
+        const res = await axios.get(`/stockDetail/${payload.title}`)
+        commit('updateState', {
+          stockLoading: false,
+          chartStock: res.data
+        })
+
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    // /stockSubside/{title}
+    // 유사종목, 뉴스를 가져온다.
     async getStockSubSide ({commit}, payload) {
       try {
+        commit('updateSttae', {
+          subSideLoading: true
+        })
         const res = await axios.get(`/stockSubside/${payload.title}`)
         commit('updateState', {
+          subSideLoading: false,
           subSide: res.data
         })
       } catch (e) {

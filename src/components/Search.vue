@@ -60,7 +60,6 @@ export default {
   },
   methods: {
     inputChanged () {
-      console.log('inputChanged')
       this.$refs.autoinput.blur()
       this.$store.dispatch('content/searchContents', this.select)
     },

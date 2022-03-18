@@ -79,14 +79,8 @@
   state: () => ({
     // 개별 기업
     stock: {},           // 개별 종목에 대한 주가정보를 담은 OBJECT
-                         // 디테일 페이지의 핵심.
-
-    // 전체 기업
-    // 겹치는게 엄청 많아서 통일해야함..
+    stocks: []            // 상장된 모든 종목
     subscribes: {},      // 전체 종목에 대한 구독여부를 담은 OBJECT
-    volumeRank: {},      // 시가 총액 TOP 10을 담는 OBJECT
-    nameMappingCode: {}, // 전체 기업 이름과 코드를 담는 OBJECT
-    searchStates: []     // 전체 기업 이름을 담는 ARRAY
   }),
 ```
 ```js
@@ -103,26 +97,15 @@
     },
   }
 
+  stocks: [
+
+  ]
+
   subscribes: {
     'AJ네트웍스': false,
     '삼성전자': true,
     ...
   }
-
-  volumeRank: {
-    [{ 'code': '005930', 'name': '삼성전자'}],
-    [{ 'code': '000660', 'name': 'SK하이닉스'}]
-    ...
-  }
-
-  nameMappingCode: {
-    'AJ네트웍스': '060310'
-    '삼성전자' : '005930'
-    ...
-  }
-
-  searchStates: ['삼성전자', 'SK하이닉스', '삼성전자우', ...]
-
 
 ```
 ***mutations***
@@ -134,6 +117,9 @@
     
     // state의 stock 항목 초기화
     initStock (state) { }
+
+    // state의 subscritbe 항목 변경
+    subscribeChange (state, payload)
   },
 ```
 
@@ -145,9 +131,10 @@
     // stock을 이용하여 차트데이터 생성 요청.
     async searchContents({state, commit, dispatch}, payload) { }
 
-    // 오늘의 기업 전체 지표를 가져옴.
-    // state의 nameMappingCode, volumeRank, searchStates, subscribes 초기화.
-    async getTodayContents ({commit, state}) { }
+    // 오늘 기준 기업 전체 지표를 가져옴.
+    async getTodayContents ({commit, state}) { 
+      // init stocks...
+    }
   }
 ```  
 

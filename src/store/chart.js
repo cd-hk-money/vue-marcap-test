@@ -3,13 +3,13 @@ export default {
   state: ()=>({
     chartOptions: {
       chart: {
-        background: '#F0FFFF',
+        background: '#fff',
         animations: {
           enabled: true,
           easing: 'easinout',
           animateGradualiy: {
             enabled: true,
-            delay: 300
+            delay: 500
           }
         },
         annotations: {
@@ -49,6 +49,10 @@ export default {
         },
         id: `123`
       },
+      stroke: {
+        show: true,
+        curve: 'smooth'
+      },
       type: 'candlestick',
       xaxis: {
         type: '',
@@ -80,7 +84,6 @@ export default {
     getChartSeries: state => payload => {
       return payload.type === 'line'? state.lineData : state.candleData
     },
-
   },
   mutations: {
     updateState (state, payload) {
@@ -94,9 +97,9 @@ export default {
       let temp = []
 
       if (chartType === 'candle') {
-        for (let entry of Object.entries(stock)) {
+        for (let entry of Object.entries(stock)) {          
           temp.push({
-            x: entry[0],
+            x: entry[0].slice(5, ),
             y: [
               entry[1].Open,
               entry[1].High,
@@ -114,7 +117,7 @@ export default {
       } else if (chartType === 'line') {
         for (let entry of Object.entries(stock)) {
           temp.push({
-            x: entry[0],
+            x: entry[0].slice(5, ),
             y: entry[1].Volume
           })
         }   

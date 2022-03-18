@@ -1,7 +1,8 @@
 <template>
  <div>
    <apexchart   
-    width="400" 
+    width="300"
+    height="300" 
     :type="getChartType" 
     :options="options" 
     :series="series"></apexchart>

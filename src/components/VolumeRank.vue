@@ -110,13 +110,13 @@ export default {
     font-weight: bold;
     justify-content: center;
     color: white;
-    padding: 10px;
+    padding: 4px;
     border-bottom: 3px solid grey;
   }
   .v-list {
     background: black;
   }
   .v-list-item {
-    border-bottom: 1.0px solid grey;
+    border-bottom: 1px solid grey;
   }
 </style>

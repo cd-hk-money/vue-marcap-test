@@ -21,10 +21,6 @@ export default {
         state[key] = payload[key]
       })
     },
-    initState (state) {
-      state.amountTop = {}
-      state.changeRatioTop = {}
-    },
   },
   actions: {
 

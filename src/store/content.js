@@ -13,16 +13,22 @@ export default {
   namespaced: true,
   state: () => ({
     title: '',                // 검색창
-
-    stock: {},                // 종목 상세 정보
-    stocks: [],               // 상장된 모든 종목
-    chartStock: {},           // 그래프 표현을 위한 종목 정보
-    subSide: {},              // 유사종목, 뉴스
     subscribes: {},           // 구독여부
 
+    stock: {},                // 종목 상세 정보
+    chartStock: {},           // 그래프 표현을 위한 종목 정보
+    subSide: {},              // 유사종목, 뉴스
+    
+    stocks: [],               // 상장된 모든 종목
+    daily: {},                // 오늘의 주식시장
+    dailyRank: {},            // 거래대금, 등락률
+    
     stockLoading: false,      // 종목 상세정보 로딩
     chartStockLoading: false, // 그래프 표현을 위한 종목 정보 로딩
     subSideLoading: false,    // 유사종목, 뉴스 로딩
+
+    dailyLoading: false,      // 오늘의 주식시장 로딩
+    dailyRankLoading: false   // 거래대금, 등락률 로딩
   }),
   getters: {
     // 이름과 코드 매핑
@@ -79,11 +85,6 @@ export default {
         state[key] = payload[key]
       })
     },
-    initState (state) {
-      state.stock = {}
-      state.chartStock = {}
-      state.subSide = {}
-    },
     subscribeChange (state, payload) {
       state.subscribes[payload] = !state.subscribes[payload]
     }
@@ -100,7 +101,7 @@ export default {
         const res = await axios.get(`/stock/${stockId}/${requestDate}`)
         commit('updateState', {
           chartStockLoading: false,
-          stock: res.data
+          chartStock: res.data
         })
 
         const candleTemp = []
@@ -133,7 +134,7 @@ export default {
 
     // /stock/Sub/{stockId}
     // 유사종목, 뉴스를 가져온다.
-    async getStockSubSide ({commit}, {stockId}) {
+    async getStockSub ({commit}, {stockId}) {
       try {
         commit('updateSttae', {
           subSideLoading: true
@@ -146,6 +147,42 @@ export default {
       } catch (e) {
         console.log(e)
       }
-    }
+    },
+
+    // 랜딩 페이지
+    
+    // /daily
+    // 오늘의 주식시장
+    async getDaily ({commit}) {
+      try {
+        commit('updateState', {
+          dailyLoading: true
+        })  
+        const res = await axios.get('/daily')
+        commit('updateState', {
+          dailyLoading: false,
+          daily: res.data
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    // /dailyRank
+    // 거래대금, 등락률을 가져온다.
+    async getDailyRank ({commit}) {
+      try {
+        commit('updateState', {
+          dailyRankLoading: true
+        })
+        const res = await axios.get('/dailyRank')
+        commit('updateState', {
+          dailyRankLoading: false,
+          dailyRank: res.data
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    },    
   }
 }

@@ -22,11 +22,6 @@ export default {
         state[key] = payload[key]
       })
     },    
-    initState (state) {
-      state.stock = {}
-      state.chartStock = {}
-      state.subSide= {}
-    }
   },
   actions: {
 

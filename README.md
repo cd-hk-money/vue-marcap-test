@@ -85,21 +85,42 @@
 ***state***
 ```js
   state: () => ({
-    title: '',           // Search 컴포넌트의 title
-    rangeSelected: "10일"// 기본 검색 요청 일수
+    title: '',                // 검색창
+    subscribes: {},           // 구독여부
 
-    loading: false,           // 검색창 로딩
-    subsideLoading: false,    // 유사종목, 뉴스 로딩
-    detailsLoading: false,    // 상세정보 페이지 로딩 
+    stock: {},                // 종목 상세 정보
+    chartStock: {},           // 그래프 표현을 위한 종목 정보
+    subSide: {},              // 유사종목, 뉴스
+    
+    stocks: [],               // 상장된 모든 종목
+    daily: {},                // 오늘의 주식시장
+    dailyRank: {},            // 거래대금, 등락률
+    
+    stockLoading: false,      // 종목 상세정보 로딩
+    chartStockLoading: false, // 그래프 표현을 위한 종목 정보 로딩
+    subSideLoading: false,    // 유사종목, 뉴스 로딩
 
-    stock: {},           // 개별 종목에 대한 주가정보를 담은 OBJECT
-    stocks: []            // 상장된 모든 종목에 대한 ARRAY
-    subscribes: {},      // 전체 종목에 대한 구독여부를 담은 OBJECT
+    dailyLoading: false,      // 오늘의 주식시장 로딩
+    dailyRankLoading: false   // 거래대금, 등락률 로딩
   }),
 ```
 ```js
   stock: {
-    {
+    'title':                // 기업명
+    'code':                 // 기업코드
+    'renewalDate':          // 최근 갱신일   
+    'closePrice':           // 최근 종가
+    'closePriceAmount':     // 최근 종가 변화량
+    'closePriceRatio':      // 최근 종가 변화율
+    'closeVolume':          // 최근 거래량
+    'closeVolumeAmount':    // 최근 거래량 변화량
+    'closeVolumeRatio':     // 최근 거래량 변화율    
+  }
+
+
+  chartStock: {
+    name: ''            // 기업명
+    stockPrice: {       // 주가
       '2022-03-10' : 
         {"Change": 0.1, "Close": 20, "High": 25, "Low": 15, "Open": 16, "Volume": 300},
       '2022-03-11' : 
@@ -107,17 +128,23 @@
       '2022-03-12' : 
         {"Change": 0.1, "Close": 20, "High": 25, "Low": 15, "Open": 16, "Volume": 300},
       ...
-      'Name' : '삼성전자우'
-    },
+    },  
+    sales: []           // 매출액
+    profits: []         // 영업이익
+    eps: []             // eps
   }
 
-  stocks: [
-    {}
-  ]
+  subSide: {
+    similar_stock: [],  // 유사종목
+    news: []            // 뉴스
+  }
+
+  stocks
 ```
 
 ***getters***
 ```js
+
   // 이름과 코드 매핑
   nameMappingCode: state => { },
   

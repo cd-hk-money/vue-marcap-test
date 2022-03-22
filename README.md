@@ -139,22 +139,32 @@
     news: []            // 뉴스
   }
 
-  stocks
+  stocks: [
+    ['005930', '삼성전자', 'KOSPI', ...],
+    ['000660'], 'SK하이닉스', 'KOSPI' ...],
+    ...
+  ],
+
+  daily: {
+    kospi: [],
+    nasdaq: [],
+    nyse: []
+  }
+
+  dailyRank: {
+    transPriceRank: {},
+    fluctuationRateRank: {}
+  }
+    
 ```
 
 ***getters***
 ```js
 
-  // 이름과 코드 매핑
+  // state의 stocks에서 이름과 코드를 매핑
   nameMappingCode: state => { },
   
-  // DetailsInfo Component에서 활용될 차트 이외의 데이터들
-  recent: (state, getters) => { },
-
-  // 거래대금 TOP 10
-  volumeRank: state => { },
-
-  // 자동완성을 위한 종목명 테이블
+  // state의 stocks에서 검색 자동완성을 위해 종목이름만 얻어옴
   searchStates: state => { },
 
 ```
@@ -164,9 +174,6 @@
     // payload = {key: value} 로 받아 key에 해당하는 state를 value로 변경.
     updateState(state, payload) { }          
     
-    // state의 stock 항목 초기화
-    initStock (state) { }
-
     // state의 subscritbe 항목 변경
     subscribeChange (state, payload) { }
   },
@@ -177,14 +184,24 @@
   actions: {      
     
     // /stock/{stockId}/{requestDate}
+    // 그래프 표현을 위한 종목 정보를 가져온다.
+    async getChartStockDetail ({commit, dispatch}, {stockId, requestDate}) { }
+
     // /stock/{stockId}
-    // 종목의 주식 가격과 상세정보를 가져온다.
-    async searchContents({state, commit}, payload) { }
+    // 종목의 상세정보를 가져온다.
+    async getStockDetail ({commit}, {stockId}) { }
+
+    // /stock/Sub/{stockId}
+    // 유사종목, 뉴스를 가져온다.
+    async getStockSub ({commit}, {stockId}) { }
 
     // /daily
+    // 오늘의 주식시장
+    async getDaily ({commit}) { }
+
     // /dailyRank
-    // 오늘의 주식시장과 거래 대금, 등락률을 가져온다.
-    async getTodayContents ({commit, state}) { }
+    // 거래대금, 등락률을 가져온다.
+    async getDailyRank ({commit}) { }
   }
 ```  
 

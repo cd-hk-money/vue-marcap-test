@@ -115,6 +115,10 @@
     'closeVolume':          // 최근 거래량
     'closeVolumeAmount':    // 최근 거래량 변화량
     'closeVolumeRatio':     // 최근 거래량 변화율    
+    'stockAmount':          // 발행주식수
+    'marcap':               // 시가총액
+    'higiestYears':         // 52주 최고
+    'lowestYears':          // 52주 최저
   }
 
 

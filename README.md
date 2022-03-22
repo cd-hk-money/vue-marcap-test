@@ -1,12 +1,11 @@
-# vue-marcap-test
 
-# <strong>state->getters 이전버전. 구조변경으로 수정 필요. </strong>
-
-## /src/store
+# /src/store
 
 ### <strong>`interest.js`</strong> : 관심종목 <br>
 ### <strong>`content.js`</strong> : 기업 정보 <br>
-### <strong>`chart.js`</strong> : 차트데이터 <br>
+### <strong>`chart.js`</strong> : 차트데이터 관련<br>
+<br>
+
 <br>
 
 ```js
@@ -42,33 +41,42 @@
     ]
 ```
 
+***getters***
+```js
+  // state의 interestList 반환
+  getInterestList: state => state.interestList 
+```
+
 ***mutations***
 ```js
   mutations: {      
     // payload = {key: value} 로 받아 key에 해당하는 state를 value로 변경.
-    // payload = {title: 'codma'} 일경우 state의 title을 'codma'로 변경.
-    updateState(state, payload) { }                       
+    updateState (state, payload) { }         
+    
+    // interestList 갱신
+    updateInterestList(state, payload) { }
   },
 ```
 
 ***actions***
 ```js  
   actions: {      
-    // payload로써 관심종목 리스트 이름을 받고, 
-    // 관심종목 리스트목록에 관심종목 리스트를 생성하여 추가한다.
-    addInterestList ({commit, state}, payload) { }
 
-    // payload로써 관심종목 리스트 이름을 받고,
-    // 관심종목 리스트목록에 관심종목 리스트 이름에 해당하는 리스트를 삭제한다.
-    removeInteretList ({commit, state}, payload)
+    // /interestList
+    // 관심종목 리스트 정보를 가져온다.    
+    async initInterestList ({commit}, {memberId}) { },
 
-    // payload = {interestList, title} 로 받아 
-    // interestList에 해당하는 관심종목 리스트에 title 이름으로 관심종목을 추가한다.
-    addInterest ({commit, state}, payload) { }
+    // /interestList
+    // 관심종목 리스트를 추가한다.
+    async addInterestList ({commit}, {memberId, interestListName}) { },
 
-    // payload = {interestList, title} 로 받아 
-    // interestList에 해당하는 관심종목 리스트에 title 이름의 관심종목을 삭제한다.
-    removeInterest ({commit, state, payload}) { }
+    // /interestItem/{name}
+    // 관심종목 리스트에 관심종목을 추가한다.
+    async addInterestListItem ({commit}, {memberId, stockCode, name}) { }
+
+    // /interestItem
+    // 관심종목 리스트의 이름을 변경한다.
+    async editInterestList ({commit}, payload) { },
   }
 ```  
 ---
@@ -77,9 +85,15 @@
 ***state***
 ```js
   state: () => ({
-    // 개별 기업
+    title: '',           // Search 컴포넌트의 title
+    rangeSelected: "10일"// 기본 검색 요청 일수
+
+    loading: false,           // 검색창 로딩
+    subsideLoading: false,    // 유사종목, 뉴스 로딩
+    detailsLoading: false,    // 상세정보 페이지 로딩 
+
     stock: {},           // 개별 종목에 대한 주가정보를 담은 OBJECT
-    stocks: []            // 상장된 모든 종목
+    stocks: []            // 상장된 모든 종목에 대한 ARRAY
     subscribes: {},      // 전체 종목에 대한 구독여부를 담은 OBJECT
   }),
 ```
@@ -98,43 +112,52 @@
   }
 
   stocks: [
-
+    {}
   ]
+```
 
-  subscribes: {
-    'AJ네트웍스': false,
-    '삼성전자': true,
-    ...
-  }
+***getters***
+```js
+  // 이름과 코드 매핑
+  nameMappingCode: state => { },
+  
+  // DetailsInfo Component에서 활용될 차트 이외의 데이터들
+  recent: (state, getters) => { },
+
+  // 거래대금 TOP 10
+  volumeRank: state => { },
+
+  // 자동완성을 위한 종목명 테이블
+  searchStates: state => { },
 
 ```
 ***mutations***
 ```js
   mutations: {      
     // payload = {key: value} 로 받아 key에 해당하는 state를 value로 변경.
-    // payload = {title: 'codma'} 일경우 state의 title을 'codma'로 변경.
     updateState(state, payload) { }          
     
     // state의 stock 항목 초기화
     initStock (state) { }
 
     // state의 subscritbe 항목 변경
-    subscribeChange (state, payload)
+    subscribeChange (state, payload) { }
   },
 ```
 
 ***actions***
 ```js  
   actions: {      
-    // payload로써 종목 이름을 받고,
-    // 종목 이름에 해당하는 api 요청을 보내 state의 stock에 저장.
-    // stock을 이용하여 차트데이터 생성 요청.
-    async searchContents({state, commit, dispatch}, payload) { }
+    
+    // /stock/{stockId}/{requestDate}
+    // /stock/{stockId}
+    // 종목의 주식 가격과 상세정보를 가져온다.
+    async searchContents({state, commit}, payload) { }
 
-    // 오늘 기준 기업 전체 지표를 가져옴.
-    async getTodayContents ({commit, state}) { 
-      // init stocks...
-    }
+    // /daily
+    // /dailyRank
+    // 오늘의 주식시장과 거래 대금, 등락률을 가져온다.
+    async getTodayContents ({commit, state}) { }
   }
 ```  
 
@@ -188,17 +211,18 @@
   mutations: {      
     // payload = {key: value} 로 받아 key에 해당하는 state를 value로 변경.
     // payload = {title: 'codma'} 일경우 state의 title을 'codma'로 변경.
-    updateState(state, payload) { }          
+    updateState(state, payload) {}       
+    
+
+    // payload = {chartType, stock} 로 받아 
+    // chartType에 맞는 차트를 stock를 이용하여 생성.
+    // stock의 형식은 content.js의 state의 형식과 같다.
+    createChartData(state, payload) {}
   },
 ```
 
 ***actions***
-```js
-  actions: {
-    // payload = {chartType, stock} 로 받아 
-    // chartType에 맞는 차트를 stock를 이용하여 생성.
-    // stock의 형식은 content.js의 state의 형식과 같다.
-    createChartData({commit}, payload) { }
-  }
+```js 
+  // nothing
 ```
 

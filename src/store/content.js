@@ -1,28 +1,28 @@
 import axios from 'axios'
 import * as _ from 'lodash'
 import {numberRegularation} from '../tools/index.js'
-const DAYENUM = Object.freeze({"1일": 1, "5일": 5, "10일": 10, "30일": 30})
-// const STOCK = Object({"단일종목": 1, "전체종목": 2})
-const HEADER = {
-  headers: {
-    'Content-Type': 'text/plain;charset=utf-8'
-  }
-}
+
+// const DAYENUM = Object.freeze({"1일": 1, "5일": 5, "10일": 10, "30일": 30})
+// const HEADER = {
+//   headers: {
+//     'Content-Type': 'text/plain;charset=utf-8'
+//   }
+// }
 
 export default {
   namespaced: true,
   state: () => ({
-    title: '',  // Search 컴포넌트의 title
-    rangeSelected: "10일",
+    title: '',                // 검색창
 
-    loading: false,
-    loaded: false,
-    subsideLoading: false,
-    detailsLoading: false,
+    stock: {},                // 종목 상세 정보
+    stocks: [],               // 상장된 모든 종목
+    chartStock: {},           // 그래프 표현을 위한 종목 정보
+    subSide: {},              // 유사종목, 뉴스
+    subscribes: {},           // 구독여부
 
-    stock: {},  // 검색한 종목 하나에 대한 주가정보
-    stocks: [], // 상장된 모든 종목
-    subscribes: {}, // 구독여부
+    stockLoading: false,      // 종목 상세정보 로딩
+    chartStockLoading: false, // 그래프 표현을 위한 종목 정보 로딩
+    subSideLoading: false,    // 유사종목, 뉴스 로딩
   }),
   getters: {
     // 이름과 코드 매핑
@@ -79,56 +79,73 @@ export default {
         state[key] = payload[key]
       })
     },
-    initStock (state) {
-      state.stock = null
+    initState (state) {
+      state.stock = {}
+      state.chartStock = {}
+      state.subSide = {}
     },
     subscribeChange (state, payload) {
       state.subscribes[payload] = !state.subscribes[payload]
     }
   },
   actions: {
-    async searchContents ({ state, commit}, payload) {
-      const requestDate = DAYENUM[state.rangeSelected]
+
+    // /stock/{stockId}/{requestDate}
+    // 그래프 표현을 위한 종목 정보를 가져온다.
+    async getChartStockDetail ({commit, dispatch}, {stockId, requestDate}) {      
       try {
         commit('updateState', {
-          loading: true
+          chartStockLoading: true
         })
-        const root = parseInt(payload) ? 'findByCode' : 'findByName'        
-        const url = `/${root}/${payload}/${requestDate}`          
-        const res = await axios.get(url, HEADER) 
-
-        const tempStock = _.cloneDeep(res.data)  
+        const res = await axios.get(`/stock/${stockId}/${requestDate}`)
         commit('updateState', {
-          stock: tempStock,
-          loading: false,
-          loaded: true,
-          title: ''
+          chartStockLoading: false,
+          stock: res.data
         })
-        commit('chart/createChartData', {
+
+        const candleTemp = []
+        dispatch('/chart/createChartData', {
           chartType: 'candle',
-          stock: tempStock
-        },{ root: true })
-        commit('chart/createChartData', {
-          chartType: 'line',
-          stock: tempStock
-        },{ root: true })
-      } catch(e) {
+          data: candleTemp
+        },{root: true})
+      } catch (e) {
         console.log(e)
       }
     },
 
-    // 오늘의 주식시장
-    async getTodayContents ({commit}) {
+    // /stock/{stockId}
+    // 종목의 상세정보를 가져온다.
+    async getStockDetail ({commit}, {stockId}) {
       try {
-        const url = '/today'
-        const res = await axios.get(url ,HEADER) 
-
         commit('updateState', {
-          stocks: res.data.data,
+          stockLoading: true
         })
-      } catch(e) {
+        const res = await axios.get(`/stock/${stockId}}`)
+        commit('updateState', {
+          stockLoading: false,
+          chartStock: res.data
+        })
+
+      } catch (e) {
         console.log(e)
-      }       
+      }
     },
+
+    // /stock/Sub/{stockId}
+    // 유사종목, 뉴스를 가져온다.
+    async getStockSubSide ({commit}, {stockId}) {
+      try {
+        commit('updateSttae', {
+          subSideLoading: true
+        })
+        const res = await axios.get(`/stock/Sub/${stockId}`)
+        commit('updateState', {
+          subSideLoading: false,
+          subSide: res.data
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    }
   }
 }

@@ -30,16 +30,14 @@ export default {
   },
   actions: {
 
-    // /stockDetail/{title}
+    // /stock/{stockId}/{requestDate}
     // 그래프 표현을 위한 종목 정보를 가져온다.
-    async getChartStockDetail ({commit, dispatch}, payload) {      
+    async getChartStockDetail ({commit, dispatch}, {stockId, requestDate}) {      
       try {
         commit('updateState', {
           chartStockLoading: true
         })
-        const res = await axios.get(`/stockDetail/${payload.title}`, {
-          requestDate: payload.requestDate
-        })
+        const res = await axios.get(`/stock/${stockId}/${requestDate}`)
         commit('updateState', {
           chartStockLoading: false,
           stock: res.data
@@ -55,14 +53,14 @@ export default {
       }
     },
 
-    // /stockDetail/{title}
-    // 종목 정보를 가져온다.
-    async getStockDetail ({commit}, payload) {
+    // /stock/{stockId}
+    // 종목의 상세정보를 가져온다.
+    async getStockDetail ({commit}, {stockId}) {
       try {
         commit('updateState', {
           stockLoading: true
         })
-        const res = await axios.get(`/stockDetail/${payload.title}`)
+        const res = await axios.get(`/stock/${stockId}}`)
         commit('updateState', {
           stockLoading: false,
           chartStock: res.data
@@ -73,14 +71,14 @@ export default {
       }
     },
 
-    // /stockSubside/{title}
+    // /stock/Sub/{stockId}
     // 유사종목, 뉴스를 가져온다.
-    async getStockSubSide ({commit}, payload) {
+    async getStockSubSide ({commit}, {stockId}) {
       try {
         commit('updateSttae', {
           subSideLoading: true
         })
-        const res = await axios.get(`/stockSubside/${payload.title}`)
+        const res = await axios.get(`/stock/Sub/${stockId}`)
         commit('updateState', {
           subSideLoading: false,
           subSide: res.data

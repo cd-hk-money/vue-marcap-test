@@ -124,7 +124,7 @@ export default {
         const res = await axios.get(`/stock/${stockId}}`)
         commit('updateState', {
           stockLoading: false,
-          chartStock: res.data
+          stock: res.data
         })
 
       } catch (e) {

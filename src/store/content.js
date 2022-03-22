@@ -126,6 +126,7 @@ export default {
         commit('updateState', {
           stocks: res.data.data,
         })
+        console.log(res.data.data)
       } catch(e) {
         console.log(e)
       }       
